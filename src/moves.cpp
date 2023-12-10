@@ -7,25 +7,35 @@ using namespace std;
 
 void intIntoScramble(int num, short *arr){
     int i=0;
-    int j=120;
+    int j=60;
     int k;
     int p;
+    short six[6] = {0,1,2,3,4,5};
+    bool used[6];
     while (i<4){
         arr[i] = num % 3;
         num = num / 3;
         i++;
     }
-    while (i < 10){
+    k=0;
+    while (i < 9){
         arr[i] = num & 1;
+        if (num & 1){
+            k++;
+        }
         num = num >> 1;
         i++;
     }
-    short six[6] = {0,1,2,3,4,5};
-    bool used[6];
+    if(k & 1){
+        arr[9] = 1;
+    } else {
+        arr[9] = 0;
+    }
+    i++;
     for (int i=0; i<6; i++){
         used[i] = false;
     }
-    while(i < 15){
+    while(i < 14){
         k = num/j;
         p = 0;
         while (k > -1){
@@ -50,6 +60,42 @@ void intIntoScramble(int num, short *arr){
         used[p] = true;
         i++;
     }
+    for (int i=0; i<6; i++){
+        used[i] = false;
+    }
+    bool switched = false;
+    bool twoCycleValid = true;
+    bool fourExist = false;
+    i = 10;
+    while (i < 16){
+        j = 0;
+        if (!used[i-10]){
+            p = i-10;
+            while (!used[p]){
+                used[p] = true;
+                p = arr[p+10];
+                j++;
+            }
+        }
+        if (j==2){
+            twoCycleValid = !twoCycleValid;
+        } else if (j == 4){
+            fourExist = true;
+        } if (j == 5){
+            switched = true;
+            break;
+        } 
+        i++;
+    }
+    if (!twoCycleValid && !fourExist){
+        switched = true;
+    }
+    short temp;
+    if (switched){
+        temp = arr[15];
+        arr[15] = arr[14];
+        arr[14] = temp;
+    }
     return;
 }
 
@@ -59,13 +105,13 @@ int scrambleIntoInt(short* arr){
     int i = 10;
     int p;
     int j;
-    int k = 120;
+    int k = 60;
     short six[6] = {0,1,2,3,4,5};
     bool used[6];
     for (int i=0; i<6; i++){
         used[i] = false;
     }
-    while (i < 15){
+    while (i < 14){
         j = 0;
         p = 0;
         while(six[p] != arr[i]){
@@ -80,7 +126,7 @@ int scrambleIntoInt(short* arr){
         i++;
     }
     int orientation = 0;
-    i = 9;
+    i = 8;
     while(i > 3){
         orientation = orientation << 1;
         orientation += arr[i];
@@ -93,7 +139,7 @@ int scrambleIntoInt(short* arr){
         i--;
     }
     num = permutation;
-    num *= 64;
+    num *= 32;
     num += orientation;
     num *= 81;
     num += center;
@@ -154,16 +200,10 @@ int doMove(short *state, short moveNum){
 
 /*
 int main(){
-    int n;
-    int temp;
-    std::cin >> n;
     short arr[16];
-    intIntoScramble(n, arr);
-    std::cout << scrambleIntoInt(arr) << "\n";
-    for(short i=0; i<8; i++){
-        temp = doMove(arr, i);
-        std::cout << temp << " ";
-        intIntoScramble(temp, arr);
+    for(int i=647839; i<933120; i++){
+        intIntoScramble(i, arr);
+        std::cout << i << " " << scrambleIntoInt(arr) << " ";
         for (int j=0; j<16; j++){
             std::cout << arr[j];
         }
