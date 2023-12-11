@@ -1,17 +1,14 @@
 #ifndef PYRAMINX_H
 #define PYRAMINX_H
 
-const int treeSize = 46080;
+const int graphSize = 933120;
 
 typedef struct node* Address;
 typedef struct node{
-    int outDegree[8];
     int id;
-    bool visited;
+    short distance;
 }Node;
 
-Address createNode(int newId);
-
-void initiatePyraminx(Node** p, int batch);
+Address createNode(int newId, short newDistance);
 
 #endif

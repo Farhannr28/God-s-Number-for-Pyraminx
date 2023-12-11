@@ -81,14 +81,19 @@ void intIntoScramble(int num, short *arr){
             twoCycleValid = !twoCycleValid;
         } else if (j == 4){
             fourExist = true;
+            switched = true;
         } if (j == 5){
             switched = true;
             break;
         } 
         i++;
     }
-    if (!twoCycleValid && !fourExist){
-        switched = true;
+    if (!twoCycleValid){
+        if (fourExist){
+            switched = false;
+        } else {
+            switched = true;
+        }
     }
     short temp;
     if (switched){
@@ -201,14 +206,17 @@ int doMove(short *state, short moveNum){
 /*
 int main(){
     short arr[16];
-    for(int i=647839; i<933120; i++){
+    int i=0;
+    intIntoScramble(0, arr);
+    while (i < graphSize && i == scrambleIntoInt(arr)){
+        i++;
         intIntoScramble(i, arr);
-        std::cout << i << " " << scrambleIntoInt(arr) << " ";
-        for (int j=0; j<16; j++){
-            std::cout << arr[j];
+    }
+    std :: cout << "failed at: " << i << "\n";
+    for (int j=0; j<16; j++){
+            std::cout << arr[j];    
         }
         std::cout << "\n";
-    }
     return 0;
 }
 */
